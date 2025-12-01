@@ -37,14 +37,18 @@ create or replace package body customer_manager as
         return v_gift_id;
     end choose_gift_package;
 
-
+    procedure assign_gifts_to_all
+    is 
+        cursor c_cust_info is
+            select customer_id, customer_email from customers;
+        v_gift_id    number;
+    begin
+        for v in c_cust_info loop
+            v_gift_id := choose_gift_package(get_total_purchase(v.customer_id));
+            insert into customer_rewards (customer_email, reward_id)
+                values (v.customer_email, v_gift_id); 
+        end loop;
+    end assign_gifts_to_all;
+    
 end customer_manager;
 /
-
-
-    -- need cursor to grab customer ids from customers
-    -- pipe the data into the the function
-    -- pipe data into the procedure
-        -- get value to be able to insert
-    -- insert values into customer_rewards 
-        -- customer_email, gift_id, and reward date
