@@ -40,15 +40,19 @@ create or replace package body customer_manager as
     procedure assign_gifts_to_all
     is 
         cursor c_cust_info is
-            select customer_id, customer_email from customers;
+            select customer_id, email_address from customers;
         v_gift_id    number;
     begin
         for v in c_cust_info loop
             v_gift_id := choose_gift_package(get_total_purchase(v.customer_id));
-            insert into customer_rewards (customer_email, reward_id)
-                values (v.customer_email, v_gift_id); 
+            insert into customer_rewards (customer_email, gift_id, reward_date)
+                values (v.email_address, v_gift_id, sysdate); 
         end loop;
     end assign_gifts_to_all;
     
 end customer_manager;
 /
+
+
+-- exec customer_manager.assign_gifts_to_all;
+-- select * from CUSTOMER_REWARDS;
