@@ -1,3 +1,5 @@
+drop table gift_catalog;
+
 create or replace type gift_type is table of varchar2(64);
 /
 
